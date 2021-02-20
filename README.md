@@ -60,15 +60,15 @@ ViewModel 层把 View 需要的层数据暴露，并对 View 层的 数据绑定
 ### destroyed（销毁后）
 在实例销毁之后调用。调用后，所有的事件监听器会被移除，所有的子实例也会被销毁。该钩子在服务器端渲染期间不被调用。  
 
-### 1. 什么是vue生命周期？
+### 1. 什么是Vue生命周期？
 
 答： Vue 实例从创建到销毁的过程，就是生命周期。从开始创建、初始化数据、编译模板、挂载Dom→渲染、更新→渲染、销毁等一系列过程，称之为 Vue 的生命周期。  
 
-### 2. vue生命周期的作用是什么？
+### 2. Vue生命周期的作用是什么？
 
 答：它的生命周期中有多个事件钩子，让我们在控制整个Vue实例的过程时更容易形成好的逻辑。  
 
-### 3. vue生命周期总共有几个阶段？
+### 3. Vue生命周期总共有几个阶段？
 
 答：它可以总共分为8个阶段：创建前/后, 载入前/后,更新前/后,销毁前/销毁后。  
 
@@ -81,33 +81,40 @@ ViewModel 层把 View 需要的层数据暴露，并对 View 层的 数据绑定
 答：DOM 渲染在 `mounted` 中就已经完成了。  
 
 ## 三、 Vue数据双向绑定的原理
-vue实现数据双向绑定主要是：采用数据劫持结合发布者-订阅者模式的方式，通过`Object.definePropert(）`来劫持各个属性的`setter`，`getter`，在数据变动时发布消息给订阅者，触发相应监听回调。当把一个普通 Javascript 对象传给 Vue 实例来作为它的 `data` 选项时，Vue 将遍历它的属性，用 `Object.defineProperty` 将它们转为 `getter/setter`。用户看不到 `getter/setter`，但是在内部它们让 Vue 追踪依赖，在属性被访问和修改时通知变化。  
+Vue实现数据双向绑定主要是：采用数据劫持结合发布者-订阅者模式的方式，通过`Object.definePropert(）`来劫持各个属性的`setter`，`getter`，在数据变动时发布消息给订阅者，触发相应监听回调。当把一个普通 Javascript 对象传给 Vue 实例来作为它的 `data` 选项时，Vue 将遍历它的属性，用 `Object.defineProperty` 将它们转为 `getter/setter`。用户看不到 `getter/setter`，但是在内部它们让 Vue 追踪依赖，在属性被访问和修改时通知变化。  
 
-vue的数据双向绑定 将MVVM作为数据绑定的入口，整合`Observer`，`Compile`和`Watcher`三者，通过`Observer`来监听自己的`model`的数据变化，通过`Compile`来解析编译模板指令（vue中是用来解析 `{{}}`），最终利用`watcher`搭起`observer`和`Compile`之间的通信桥梁，达到数据变化 —>视图更新；视图交互变化（`input`）—>数据`model`变更双向绑定效果。  
+Vue的数据双向绑定 将MVVM作为数据绑定的入口，整合`Observer`，`Compile`和`Watcher`三者，通过`Observer`来监听自己的`model`的数据变化，通过`Compile`来解析编译模板指令（Vue中是用来解析 `{{}}`），最终利用`watcher`搭起`observer`和`Compile`之间的通信桥梁，达到数据变化 —>视图更新；视图交互变化（`input`）—>数据`model`变更双向绑定效果。  
 
 js实现简单的双向绑定:  
 ```html
-<body>
-   <div id="app">
-   <input type="text" id="txt">
-   <p id="show"></p>
-</div>
-</body>
-<script type="text/javascript">
-   var obj = {}
-   Object.defineProperty(obj, 'txt', {
-      get: function () {
-      return obj
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <title>双向绑定最最最初级demo</title>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <div id="app">
+      <input type="text" id="txt">
+      <p id="show-txt"></p>
+    </div>
+  </body>
+  <script>
+    var obj = {}
+    Object.defineProperty(obj, 'txt', {
+      get: function() {
+        return obj.txt
       },
-      set: function (newValue) {
+      set: function(newValue) {
         document.getElementById('txt').value = newValue
-        document.getElementById('show').innerHTML = newValue
+        document.getElementById('show-txt').innerHTML = newValue
       }
     })
-    document.addEventListener('keyup', function (e) {
-    obj.txt = e.target.value
-   })
-</script>
+    document.addEventListener('keyup', function(e) {
+      obj.txt = e.target.value
+    })
+  </script>
+</html>
 ```
 
 ## 四、Vue组件间的参数传递
@@ -119,7 +126,7 @@ js实现简单的双向绑定:
 
 ### 2. 非父子组件间的数据传递，兄弟组件传值
 
-`eventBus`，就是创建一个事件中心，相当于中转站，可以用它来传递事件和接收事件。项目比较小时，用这个比较合适。（虽然也有不少人推荐直接用VUEX，具体来说看需求咯。技术只是手段，目的达到才是王道。）  
+`eventBus`，就是创建一个事件中心，相当于中转站，可以用它来传递事件和接收事件。项目比较小时，用这个比较合适。（虽然也有不少人推荐直接用Vuex，具体来说看需求咯。技术只是手段，目的达到才是王道。）  
 
 ## 五、Vue的路由实现：hash模式 和 history模式
 `hash`模式：在浏览器中符号“`#`”，`#`以及`#`后面的字符称之为`hash`，用`window.location.hash`读取；  
@@ -129,7 +136,7 @@ js实现简单的双向绑定:
 `history`模式：`history`采用HTML5的新特性；且提供了两个新方法：`pushState()`，`replaceState()`可以对浏览器历史记录栈进行修改，以及`popState`事件的监听到状态变更。  
 
 ## 六、Vue与Angular以及React的区别？
-（版本在不断更新，以下的区别有可能不是很正确。我工作中只用到vue，对angular和react不怎么熟）  
+（版本在不断更新，以下的区别有可能不是很正确。我工作中只用到Vue，对Angular和React不怎么熟）  
 
 ### 1. 与AngularJS的区别
 
@@ -151,7 +158,7 @@ React采用特殊的JSX语法，Vue.js在组件开发中也推崇编写.vue特�
 
 React采用的Virtual DOM会对渲染出来的结果做脏检查；Vue.js在模板中提供了指令，过滤器等，可以非常方便，快捷地操作Virtual DOM。  
 
-## 七、vue路由的钩子函数
+## 七、Vue路由的钩子函数
 首页可以控制导航跳转，`beforeEach`，`afterEach`等，一般用于页面title的修改。一些需要登录才能调整页面的重定向功能。  
 
 `beforeEach`主要有3个参数`to`，`from`，`next`：  
@@ -162,14 +169,14 @@ React采用的Virtual DOM会对渲染出来的结果做脏检查；Vue.js在模�
 
 `next`：function一定要调用该方法`resolve`这个钩子。执行效果依赖`next`方法的调用参数。可以控制网页的跳转。  
 
-## 八、vuex是什么？怎么使用？哪种功能场景使用它？
+## 八、Vuex是什么？怎么使用？哪种功能场景使用它？
 只用来读取的状态集中放在`store`中； 改变状态的方式是提交`mutations`，这是个同步的事物； 异步逻辑应该封装在`action`中。  
 
 在main.js引入`store`，注入。新建了一个目录`store`，.....`export` 。  
 
 场景有：单页应用中，组件之间的状态、音乐播放、登录状态、加入购物车  
 
-![vuex](http://p1.pstatp.com/large/pgc-image/1539225106260cb4eb3f35e)  
+![Vuex](http://p1.pstatp.com/large/pgc-image/1539225106260cb4eb3f35e)  
 
 ### `state`  
 
@@ -181,7 +188,7 @@ mutations定义的方法动态修改Vuex 的 store 中的状态或数据。
 
 ### `getters`  
 
-类似vue的计算属性，主要用来过滤一些数据。  
+类似Vue的计算属性，主要用来过滤一些数据。  
 
 ### `action`  
 
@@ -192,19 +199,19 @@ const store = new Vuex.Store({ //store
 实例  
 ```js
 ({
-   state: {
-      count: 0
-   },
-   mutations: { 
-     increment (state) {
-     state.count++
+  state: {
+    count: 0
+  },
+  mutations: { 
+    increment (state) {
+      state.count++
     }
-   },
+  },
   actions: {
-     increment (context) {
-     context.commit('increment')
-     }
-   }
+    increment (context) {
+      context.commit('increment')
+    }
+  }
 })
 ```
 ### `modules`
@@ -212,20 +219,21 @@ const store = new Vuex.Store({ //store
 项目特别复杂的时候，可以让每一个模块拥有自己的`state`、`mutation`、`action`、`getters`,使得结构非常清晰，方便管理。  
 ```js
 const moduleA = {
-   state: { ... },
-   mutations: { ... },
-   actions: { ... },
-   getters: { ... }
+  state: { ... },
+  mutations: { ... },
+  actions: { ... },
+  getters: { ... }
 }
 const moduleB = {
-   state: { ... },
-   mutations: { ... },
-   actions: { ... }
+  state: { ... },
+  mutations: { ... },
+  actions: { ... }
 } 
 const store = new Vuex.Store({
-   modules: {
-   a: moduleA,
-   b: moduleB
+  modules: {
+    a: moduleA,
+    b: moduleB
+  }
 })
 ```
 
@@ -234,30 +242,29 @@ const store = new Vuex.Store({
 ```js
 var app = new Vue({
   el: '#app',
-  data: { 
-  },
+  data: {},
   // 创建指令(可以多个)
   directives: {
     // 指令名称
     dir1: {
-    inserted(el) {
-    // 指令中第一个参数是当前使用指令的DOM
-    console.log(el);
-    console.log(arguments);
-    // 对DOM进行操作
-    el.style.width = '200px';
-    el.style.height = '200px';
-    el.style.background = '#000';
+      inserted(el) {
+        // 指令中第一个参数是当前使用指令的DOM
+        console.log(el);
+        console.log(arguments);
+        // 对DOM进行操作
+        el.style.width = '200px';
+        el.style.height = '200px';
+        el.style.background = '#000';
+      }
     }
   }
- }
 })
 ```
 ### 2. 全局指令  
 ```js
 Vue.directive('dir2', {
   inserted(el) {
-  console.log(el);
+    console.log(el);
   }
 })
 ```
@@ -269,7 +276,7 @@ Vue.directive('dir2', {
 </div>
 ```
 
-## 十、vue如何自定义一个过滤器？
+## 十、Vue如何自定义一个过滤器？
 html代码：  
 ```html
 <div id="app">
@@ -286,9 +293,9 @@ var vm=new Vue({
   },
   filters: {
     capitalize: function (value) {
-    if (!value) return ''
-    value = value.toString()
-    return value.charAt(0).toUpperCase() + value.slice(1)
+      if (!value) return ''
+      value = value.toString()
+      return value.charAt(0).toUpperCase() + value.slice(1)
     }
   }
 })
@@ -307,7 +314,7 @@ Vue.filter('capitalize', function (value) {
 
 `keep-alive`是 Vue 内置的一个组件，可以使被包含的组件保留状态，或避免重新渲染。  
 
-在vue 2.1.0 版本之后，`keep-alive`新加入了两个属性: `include`(包含的组件缓存) 与 `exclude`(排除的组件不缓存，优先级大于include) 。  
+在Vue 2.1.0 版本之后，`keep-alive`新加入了两个属性: `include`(包含的组件缓存) 与 `exclude`(排除的组件不缓存，优先级大于include) 。  
 
 使用方法  
 ```js
@@ -356,15 +363,15 @@ Vue.filter('capitalize', function (value) {
 
 答：`$route`是“路由信息对象”，包括`path`，`params`，`hash`，`query`，`fullPath`，`matched`，`name`等路由信息参数。而`$router`是“路由实例”对象包括了路由的跳转方法，钩子函数等。  
 
-### 4. vue.js的两个核心是什么？
+### 4. Vue.js的两个核心是什么？
 
 答：数据驱动、组件系统  
 
-### 5. vue几种常用的指令
+### 5. Vue几种常用的指令
 
 答：`v-for` 、 `v-if` 、`v-bind`、`v-on`、`v-show`、`v-else`  
 
-### 6. vue常用的修饰符？
+### 6. Vue常用的修饰符？
 
 答：`.prevent`: 提交事件不再重载页面；`.stop`: 阻止单击事件冒泡；`.self`: 当事件发生在该元素本身而不是子元素的时候会触发；`.capture`: 事件侦听，事件发生的时候会调用  
 
@@ -372,15 +379,15 @@ Vue.filter('capitalize', function (value) {
 
 答：可以  
 
-### 8. vue中 `key` 值的作用？
+### 8. Vue中 `key` 值的作用？
 
 答：当 Vue.js 用 `v-for` 正在更新已渲染过的元素列表时，它默认用“就地复用”策略。如果数据项的顺序被改变，Vue 将不会移动 DOM 元素来匹配数据项的顺序， 而是简单复用此处每个元素，并且确保它在特定索引下显示已被渲染过的每个元素。`key`的作用主要是为了高效的更新虚拟DOM。  
 
-### 9. 什么是vue的计算属性？
+### 9. 什么是Vue的计算属性？
 
 答：在模板中放入太多的逻辑会让模板过重且难以维护，在需要对数据进行复杂处理，且可能多次使用的情况下，尽量采取计算属性的方式。好处：①使得数据处理结构清晰；②依赖于数据，数据更新，处理结果自动更新；③计算属性内部`this`指向`vm`实例；④在`template`调用时，直接写计算属性名即可；⑤常用的是`getter`方法，获取数据，也可以使用`set`方法改变数据；⑥相较于`methods`，不管依赖的数据变不变，`methods`都会重新计算，但是依赖数据不变的时候`computed`从缓存中获取，不会重新计算。  
 
-### 10. vue等单页面应用及其优缺点
+### 10. Vue等单页面应用及其优缺点
 
 答：优点：Vue 的目标是通过尽可能简单的 API 实现响应的数据绑定和组合的视图组件，核心是一个响应的数据绑定系统。MVVM、数据驱动、组件化、轻量、简洁、高效、快速、模块友好。  
 
